@@ -152,6 +152,12 @@
   background: var(--accent-light);
 }
 
+.upload-zone.drag-over {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  transform: scale(1.01);
+}
+
 .upload-zone p {
   font-size: 0.9rem;
   color: var(--text-secondary);

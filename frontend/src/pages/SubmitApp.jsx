@@ -43,6 +43,8 @@ export default function SubmitApp() {
   const [iconPreview, setIconPreview] = useState(null)
   const [screenshots, setScreenshots] = useState([])
   const [screenshotPreviews, setScreenshotPreviews] = useState([])
+  const [dragOverIcon, setDragOverIcon] = useState(false)
+  const [dragOverScreenshot, setDragOverScreenshot] = useState(false)
 
   const processIconFile = (file) => {
     if (!file) return
@@ -64,6 +66,7 @@ export default function SubmitApp() {
   const handleIconDrop = (e) => {
     e.preventDefault()
     e.stopPropagation()
+    setDragOverIcon(false)
     processIconFile(e.dataTransfer.files[0])
   }
 
@@ -89,6 +92,7 @@ export default function SubmitApp() {
   const handleScreenshotDrop = (e) => {
     e.preventDefault()
     e.stopPropagation()
+    setDragOverScreenshot(false)
     processScreenshotFiles(Array.from(e.dataTransfer.files))
   }
 
@@ -257,7 +261,7 @@ export default function SubmitApp() {
                     </button>
                   </div>
                 ) : (
-                  <label className="upload-zone" onDrop={handleIconDrop} onDragOver={e => e.preventDefault()} onDragEnter={e => e.preventDefault()}>
+                  <label className={`upload-zone ${dragOverIcon ? 'drag-over' : ''}`} onDrop={handleIconDrop} onDragOver={e => { e.preventDefault(); setDragOverIcon(true) }} onDragLeave={() => setDragOverIcon(false)}>
                     <input type="file" accept="image/svg+xml,image/png,image/jpeg" onChange={handleIconChange} hidden />
                     <IconPlus style={{ width: 32, height: 32, color: 'var(--text-muted)' }} />
                     <p>{t('dragOrClick')}</p>
@@ -281,7 +285,7 @@ export default function SubmitApp() {
                   </div>
                 )}
                 {screenshots.length < 5 && (
-                  <label className="upload-zone upload-zone-sm" onDrop={handleScreenshotDrop} onDragOver={e => e.preventDefault()} onDragEnter={e => e.preventDefault()}>
+                  <label className={`upload-zone upload-zone-sm ${dragOverScreenshot ? 'drag-over' : ''}`} onDrop={handleScreenshotDrop} onDragOver={e => { e.preventDefault(); setDragOverScreenshot(true) }} onDragLeave={() => setDragOverScreenshot(false)}>
                     <input type="file" accept="image/png,image/jpeg,image/webp" multiple onChange={handleScreenshots} hidden />
                     <IconPlus style={{ width: 24, height: 24, color: 'var(--text-muted)' }} />
                     <p>{t('dragOrClick')}</p>
@@ -391,6 +395,13 @@ export default function SubmitApp() {
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* Error display */}
+          {submitError && (
+            <div className="auth-error" style={{ marginBottom: '1rem' }}>
+              {submitError}
             </div>
           )}
 

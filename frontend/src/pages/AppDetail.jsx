@@ -78,11 +78,17 @@ export default function AppDetail() {
   }
 
   const handleHelpful = async (reviewId) => {
+    if (!isLoggedIn) {
+      alert(locale === 'vi' ? 'Vui lòng đăng nhập để đánh giá' : 'Please login to mark as helpful')
+      return
+    }
     try {
       await api.toggleHelpful(reviewId)
       const data = await api.getApp(slug)
       setReviews(data.reviews || [])
-    } catch { }
+    } catch (err) {
+      alert(err.error || 'Failed to toggle helpful')
+    }
   }
 
   const iconMedia = app.media?.find(m => m.type === 'icon')
@@ -109,7 +115,7 @@ export default function AppDetail() {
           <div className="app-detail-info">
             <h1>
               {app.name}
-              {app.is_verified && <span className="badge badge-verified"><IconShield style={{ width: 14, height: 14 }} /> {t('verified')}</span>}
+              {!!app.is_verified && <span className="badge badge-verified"><IconShield style={{ width: 14, height: 14 }} /> {t('verified')}</span>}
             </h1>
             <p className="app-detail-desc">
               {locale === 'vi' ? app.short_desc : (app.short_desc_en || app.short_desc)}

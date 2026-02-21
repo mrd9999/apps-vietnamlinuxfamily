@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useLocale } from '../../i18n/useLocale.jsx'
-import { categories } from '../../data/apps'
+
 import StarRating from '../review/StarRating'
 import { IconShield } from '../icons'
 import './AppCard.css'
@@ -29,7 +29,8 @@ function getInitials(name) {
 
 export default function AppCard({ app }) {
   const { t, locale } = useLocale()
-  const cat = categories.find(c => c.id === app.category_id)
+  const catName = locale === 'vi' ? (app.category_name_vi || app.category_slug) : (app.category_name_en || app.category_slug)
+  const catColor = app.category_color
   const desc = locale === 'vi' ? app.short_desc : (app.short_desc_en || app.short_desc)
 
   return (
@@ -51,9 +52,9 @@ export default function AppCard({ app }) {
               </span>
             )}
           </h3>
-          {cat && (
-            <span className="app-card-category" style={{ background: cat.color }}>
-              {t('category', cat.name_vi, cat.name_en)}
+          {catName && (
+            <span className="app-card-category" style={{ background: catColor }}>
+              {catName}
             </span>
           )}
         </div>
